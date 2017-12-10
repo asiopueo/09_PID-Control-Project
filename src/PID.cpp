@@ -37,8 +37,10 @@ double PID::TotalError()
 	double steering;
 	steering = - Kp_ * p_error_ - Kd_ * d_error_ - Ki_ * i_error_;
 
+	// For debugging:
 	cout << "Kp: " << Kp_ << "\t p_error: " << p_error_ << "\t Kd: " 
 		<< Kd_ << "\t d_error: " << d_error_ << "\t Ki: " << Ki_ << "\t i_error: " << i_error_ << endl;
+
 
 	if (steering >= 1.0f)
 		return 1.0f;
