@@ -12,7 +12,15 @@ For build instructions, see *Basic Build Instructions* below.
 
 ## Choice of the Final Hyperparameters
 
+throttle = 0.1
 
+Kp = 5.0
+Ki = 0.01 * Kp
+Kd = 100 * Kp
+
+does work, but very slow, of course
+
+One lessons I have learned in physics, is that we first have to optain an idea of the orders of magnitude we are dealing with.
 
 
 

@@ -1,6 +1,8 @@
 #ifndef PID_H
 #define PID_H
 
+#include <array> // Added by the student
+
 class PID 
 {
     public:
@@ -16,16 +18,25 @@ class PID
         // Calculate the total PID error.
         double TotalError();
 
+        void Twiddle(); // Method added by the student
+
+
+
     private:
         // Errors
         double p_error_;
         double i_error_;
         double d_error_;
+        double twiddle_error_;  // error value for twiddle parameter optimization
 
         // Coefficients
-        double Kp_;
-        double Ki_;
-        double Kd_;
+        std::array<double, 3> params_; // Kp, Kd, Ki
+        std::array<double, 3> dparams_; // Twiddle parameters       
+
+        int cycle;
+
+        int param_counter; 
+        
 };
 
 #endif /* PID_H */
