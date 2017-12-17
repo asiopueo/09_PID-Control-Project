@@ -9,18 +9,34 @@ For build instructions, see *Basic Build Instructions* below.
 
 ## The Effect of Each of the P, I, D Components in the implementation
 
+### Proportional controller
+To demonstrate the effect of solely the proportional controller, set `Kd=Ki=0`.
+
+### Differential Controller
+To demonstrate the effect of solely the proportional controller, set `Kp=Ki=0`.
+
+### Integration Controller
+To demonstrate the effect of solely the proportional controller, set `Kp=Kd=0`.
+
+
+
 
 ## Choice of the Final Hyperparameters
+One lessons I have learned in physics is that we first have to obtain an idea of the orders of magnitude we are dealing with. Therefore I've started with manually changing the parameters by setting one of them to zero (`Kp` in this case), and multiply or divide the others by orders of ten in relation to `Kp`.
 
-throttle = 0.1
+To play it safe, I've set `throttle` to 0.1.
 
+After finding a suitable combination, I was able to tweak the magnitude of all three paramters by merely changing the value of `Kp`.
+
+```
 Kp = 5.0
 Ki = 0.01 * Kp
 Kd = 100 * Kp
+```
 
-does work, but very slow, of course
+## Twiddle Implementation
+The class `PID` contains a method called `Twiddle`.  This method is an implementation of a simple twiddle algorithm.
 
-One lessons I have learned in physics, is that we first have to optain an idea of the orders of magnitude we are dealing with.
 
 
 
