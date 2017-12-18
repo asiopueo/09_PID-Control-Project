@@ -28,7 +28,7 @@ PID::~PID() {}
 void PID::Init(double Kp, double Kd, double Ki) 
 {
 	params_ = {Kp, Kd, Ki};
-	dparams_ = {1.0, 1.0, 1.0};
+	dparams_ = {0.01, 1.0, 0.0001};
 	twiddle_error_ = 0.0;
 }
 
@@ -79,6 +79,7 @@ void PID::Twiddle()
 
     if (cycle%200==0)
     {
+            cout <<  "Twiddle" << endl;
             params_[param_counter%3] += dparams_[param_counter%3];
             
             std::cout << param_counter%3 << std::endl;

@@ -10,7 +10,7 @@ class PID
         virtual ~PID();
 
         // Initialize PID.
-        void Init(double Kp, double Ki, double Kd);
+        void Init(double Kp, double Kd, double Ki);
 
         // Update the PID error variables given cross track error.
         void UpdateError(double cte);

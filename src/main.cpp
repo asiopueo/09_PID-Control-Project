@@ -38,9 +38,9 @@ int main()
     // TODO: Initialize the pid variable.
     // Initialize PID coefficients:
 
-    double Kd = 5.0f;
-    double Kp = 0.01f*Kd;
-    double Ki = 0.0001f*Kd;
+    double Kp = 0.05;
+    double Kd = 100*Kp;
+    double Ki = 0.01*Kp;
 
     pid.Init(Kp, Kd, Ki); // order changed by the student
 
