@@ -34,21 +34,27 @@ std::string hasData(std::string s) {
 
 int main()
 {
-    PID pid;
     // TODO: Initialize the pid variable.
     // Initialize PID coefficients:
 
-    double Kp = 0.05;
-    double Kd = 100*Kp;
-    double Ki = 0.01*Kp;
+    PID pid_steering;
+    double Kp_steering = 0.05;
+    double Kd_steering = 100*Kp_steering;
+    double Ki_steering = 0.01*Kp_steering;
+    pid_steering.Init(Kp_steering, Kd_steering, Ki_steering); // order changed by the student
 
-    pid.Init(Kp, Kd, Ki); // order changed by the student
+    PID pid_throttle;
+    double Kp_throttle = 1;
+    double Kd_throttle = 10*Kp_throttle;
+    double Ki_throttle = 0.1*Kp_throttle;
+    pid_throttle.Init(Kp_throttle, Kd_throttle, Ki_throttle); // order changed by the student
+
 
     uWS::Hub h;
 
 
 
-    h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+    h.onMessage([&pid_steering, &pid_throttle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
         // "42" at the start of the message means there's a websocket message event.
         // The 4 signifies a websocket message
         // The 2 signifies a websocket event
@@ -68,25 +74,23 @@ int main()
                     double speed = std::stod(j[1]["speed"].get<std::string>());
                     double angle = std::stod(j[1]["steering_angle"].get<std::string>());
                     double steer_value;
+                    double throttle_value;
 
-                    /*
-                    * TODO: Calcuate steering value here, remember the steering value is
-                    * [-1, 1].
-                    * NOTE: Feel free to play around with the throttle and speed. Maybe use
-                    * another PID controller to control the speed!
-                    */
 
-                    pid.UpdateError(cte);
-                    pid.Twiddle();
+                    pid_steering.UpdateError(cte);
+                    //pid_steering.Twiddle();
+                    steer_value = pid_steering.TotalError();
 
-                    steer_value = pid.TotalError();
+                    pid_throttle.UpdateError(speed-30.0);
+                    //pid_throttle.Twiddle();
+                    throttle_value = (pid_throttle.TotalError()>=0.0) ? pid_throttle.TotalError() : 0.0;
 
                     // Uncomment for debugging purposes:
                     //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
                     json msgJson;
                     msgJson["steering_angle"] = steer_value;
-                    msgJson["throttle"] = 0.1;
+                    msgJson["throttle"] = throttle_value;
                     auto msg = "42[\"steer\"," + msgJson.dump() + "]";
                     // Uncomment for debugging purposes
                     //std::cout << msg << std::endl;

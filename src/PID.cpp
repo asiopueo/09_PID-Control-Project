@@ -47,20 +47,20 @@ void PID::UpdateError(double cte)
 
 double PID::TotalError() 
 {
-	double steering;
-	steering = - params_[0] * p_error_ - params_[1] * d_error_ - params_[2] * i_error_;
+	double output;
+	output = - params_[0] * p_error_ - params_[1] * d_error_ - params_[2] * i_error_;
 
 	// Uncomment for debugging purposes:
 	//cout << "Kp: " << Kp_ << "\t p_error: " << p_error_ << "\t Kd: " << Kd_ << "\t d_error: " << d_error_ << "\t Ki: " << Ki_ << "\t i_error: " << i_error_ << endl;
 
 
 
-	if (steering >= 1.0f)
+	if (output >= 1.0f)
 		return 1.0f;
-	else if (steering <= -1.0f)
+	else if (output <= -1.0f)
 		return -1.0f;
 	else
-		return steering;
+		return output;
 }
 
 
@@ -82,12 +82,11 @@ void PID::Twiddle()
             cout <<  "Twiddle" << endl;
             params_[param_counter%3] += dparams_[param_counter%3];
             
-            std::cout << param_counter%3 << std::endl;
-
             if (err < best_err)
             {
                 best_err = err;
                 dparams_[param_counter%3] *= 1.1;
+                cout << "Kp: " << params_[0] << "\t Kd: " << params_[1] << "\t Ki: " << params_[2] << endl;
                 // RESET
             }
             else
@@ -98,12 +97,14 @@ void PID::Twiddle()
                 {
                     best_err = err;
                     dparams_[param_counter%3] *= 1.1; 
+                    cout << "Kp: " << params_[0] << "\t Kd: " << params_[1] << "\t Ki: " << params_[2] << endl;
                     // RESET
                 }
                 else 
                 {
                     params_[param_counter%3] += dparams_[param_counter%3];
                     dparams_[param_counter%3] *= 0.9;
+                    cout << "Kp: " << params_[0] << "\t Kd: " << params_[1] << "\t Ki: " << params_[2] << endl;
                     // RESET
                 }
             }
