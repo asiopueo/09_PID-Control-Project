@@ -81,8 +81,12 @@ int main()
                     //pid_steering.Twiddle();
                     steer_value = pid_steering.TotalError();
 
-                    pid_throttle.UpdateError(speed-30.0);
+                    // Keeps the speed at approx. 30 mph
+                    pid_throttle.UpdateError(speed-20.0);
+
+                    // Uncomment to 
                     //pid_throttle.Twiddle();
+
                     throttle_value = (pid_throttle.TotalError()>=0.0) ? pid_throttle.TotalError() : 0.0;
 
                     // Uncomment for debugging purposes:

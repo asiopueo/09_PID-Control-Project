@@ -8,34 +8,60 @@ For build instructions, see *Basic Build Instructions* below.
 
 
 ## The Effect of Each of the P, I, D Components in the implementation
+For this demonstration, we consider only the steering controller.
 
 ### Proportional controller
 To demonstrate the effect of solely the proportional controller, set `Kd=Ki=0`.
 
+[Link to video demonstrating proportional controller only (ogv-format)](./image/videos/Kp_only.ogv)
+
+The proportional controller reacts (anti-)proportional to the cross tracking error, i.e. the steering angle is the greatest when the vehicle is the furthest away from the middle line. However, when the vehicle then crosses the middle line, the steering angle is equal to zero. This results, unfortunately, in a tendency to overshoot.
+
+
 ### Differential Controller
 To demonstrate the effect of solely the proportional controller, set `Kp=Ki=0`.
+
+[Link to video demonstrating differential controller only (ogv-format)](./image/videos/Kd_only.ogv)
+
+The differential controller keeps the axis of the vehicle aligned with the lane.
+Using the differential controller alone, however, has the disadvantage that the vehicle has no incentive to return to the middle of the lane.
 
 ### Integration Controller
 To demonstrate the effect of solely the proportional controller, set `Kp=Kd=0`.
 
+[Link to video demonstrating integral controller only (ogv-format)](./image/videos/Ki_only.ogv)
 
+The integration controller provides a memory, i.e. the longer the vehicle stays on one side of the middle line, the stronger is the tendency of the controller to counteract.
+
+### PID Controller
+Superposition of all three types of the above controllers yields the PID controller which keeps the vehicle on the middle line.
+
+[Link to video demonstrating all three controllers working together (ogv-format)](./image/videos/demo.ogv)
 
 
 ## Choice of the Final Hyperparameters
 One lessons I have learned in physics is that we first have to obtain an idea of the orders of magnitude we are dealing with. Therefore I've started with manually changing the parameters by setting one of them to zero (`Kp` in this case), and multiply or divide the others by orders of ten in relation to `Kp`.
 
-To play it safe, I've set `throttle` to 0.1.
 
 After finding a suitable combination, I was able to tweak the magnitude of all three paramters by merely changing the value of `Kp`.
 
 ```
-Kp = 5.0
-Ki = 0.01 * Kp
-Kd = 100 * Kp
+Kp_steering = 5.0
+Ki_steering = 0.01 * Kp
+Kd_steering = 100 * Kp
 ```
 
+With the throttle PID controller, I have pursued a similar approach and ended up with the simple set of parameters:
+
+```
+Kp_throttle = 1.0
+Ki_throttle = 0.01 * Kp
+Kd_throttle = 100 * Kp
+```
+
+
 ## Twiddle Implementation
-The class `PID` contains a method called `Twiddle`.  This method is an implementation of a simple twiddle algorithm.
+The class `PID` contains a method called `Twiddle`.  This method is an implementation of a simple twiddle algorithm. In the function `main`, we initialize *two* instances of PID, `pid_steering` and `pid_throttle`, in order to control both dimensions.
 
 
 
@@ -73,64 +99,3 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./pid`.
-
-Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
-
-## Editor Settings
-
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
-
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
-
-## Code Style
-
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
-
-## Project Instructions and Rubric
-
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
-
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
-
-## Hints!
-
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
-
-## Call for IDE Profiles Pull Requests
-
-Help your fellow students!
-
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
-
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
-
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
-
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
