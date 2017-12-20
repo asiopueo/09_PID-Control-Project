@@ -18,16 +18,16 @@ To demonstrate the effect of solely the proportional controller, set `Kd=Ki=0`.
 The proportional controller reacts (anti-)proportional to the cross tracking error, i.e. the steering angle is the greatest when the vehicle is the furthest away from the middle line. However, when the vehicle then crosses the middle line, the steering angle is equal to zero. This results, unfortunately, in a tendency to overshoot.
 
 
-### Differential Controller
-To demonstrate the effect of solely the proportional controller, set `Kp=Ki=0`.
+### Derivative Controller
+To demonstrate the effect of solely the derivative controller, set `Kp=Ki=0`.
 
 [Link to video demonstrating differential controller only (ogv-format)](./image/videos/Kd_only.ogv)
 
 The differential controller keeps the axis of the vehicle aligned with the lane.
 Using the differential controller alone, however, has the disadvantage that the vehicle has no incentive to return to the middle of the lane.
 
-### Integration Controller
-To demonstrate the effect of solely the proportional controller, set `Kp=Kd=0`.
+### Integral Controller
+To demonstrate the effect of solely the integral controller, set `Kp=Kd=0`.
 
 [Link to video demonstrating integral controller only (ogv-format)](./image/videos/Ki_only.ogv)
 
@@ -47,16 +47,16 @@ After finding a suitable combination, I was able to tweak the magnitude of all t
 
 ```
 Kp_steering = 5.0
-Ki_steering = 0.01 * Kp
-Kd_steering = 100 * Kp
+Ki_steering = 0.01 * Kp_steering
+Kd_steering = 100 * Kp_steering
 ```
 
 With the throttle PID controller, I have pursued a similar approach and ended up with the simple set of parameters:
 
 ```
 Kp_throttle = 1.0
-Ki_throttle = 0.01 * Kp
-Kd_throttle = 100 * Kp
+Ki_throttle = 0.01 * Kp_throttle
+Kd_throttle = 100 * Kp_throttles
 ```
 
 
